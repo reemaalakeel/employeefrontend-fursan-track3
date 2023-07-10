@@ -6,51 +6,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-job:
-    runs-on: ubuntu-latest
+  sonarcloud-scan:
+    runs-on: ubuntu-last
     steps:
-      - name: Build Step 1
-        run: echo "Build Step 1"
+      - name: Step1 Download the Source code
+        uses: actions/checkout@v3.5.3
 
-      - name: Build Step 2
-        run: echo "Build Step 2"
+      - name: Step2 Install Node.js
+        uses: actions/setup-node@v3.7.0
+        with:
+          node-version: '18.16.1'
 
-  test-job:
-    runs-on: ubuntu-latest
-    needs: build-job
-    steps:
-      - name: Test Step 1
-        run: echo "Test Step 1"
-
-      - name: Test Step 2
-        run: echo "Test Step 2"
-
-  provision-job:
-    runs-on: ubuntu-latest
-    needs: test-job
-    steps:
-      - name: Provision Step 1
-        run: echo "Provision Step 1"
-
-      - name: Provision Step 2
-        run: echo "Provision Step 2"
-
-  deploy-job:
-    runs-on: ubuntu-latest
-    needs: provision-job
-    steps:
-      - name: Deploy Step 1
-        run: echo "Deploy Step 1"
-
-      - name: Deploy Step 2
-        run: echo "Deploy Step 2"
-
-  monitor-job:
-    runs-on: ubuntu-latest
-    needs: deploy-job
-    steps:
-      - name: Monitor Step 1
-        run: echo "Monitor Step 1"
-
-      - name: Monitor Step 2
-        run: echo "Monitor Step 2"
+      - name: Step3 Install Dependencies
+        run: npm install
+      
+      - name: Step4 SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+             -Dsonar.organization=employeefrontend-fursan-track3
+             -Dsonar.projectKey=employeefrontend-fursan-track3_employeefrontend-fursan-track3
+             -Dsonar.sources=.
+             -Dsonar.host.url=https://sonarcloud.io
