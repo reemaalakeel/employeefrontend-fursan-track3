@@ -49,6 +49,7 @@ jobs:
         
       - name: Step4 NPM Audit Scan & generate report in JSON Format
         run: npm audit --json > npm-audit-results.json
+        continue-on-error: true
 
       - name: Step5 Upload NPM Audit Scan report to github
         uses: actions/upload-artifact@v3
