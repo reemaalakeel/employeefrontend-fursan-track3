@@ -7,7 +7,7 @@ on:
 
 jobs:
   sonarcloud-scan:
-    runs-on: ubuntu-last
+    runs-on: ubuntu-latest
     steps:
       - name: Step1 Download the Source code
         uses: actions/checkout@v3.5.3
